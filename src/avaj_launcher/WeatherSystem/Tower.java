@@ -3,9 +3,13 @@ import avaj_launcher.Aircraft.Flyable;
 import java.util.List;
 
 public class Tower {
-    private List<Flyable> observers;
+    private final List<Flyable> observers = new java.util.ArrayList<Flyable>();
 
     public Tower () {}
+
+    public List<Flyable> getObservers() {
+        return this.observers;
+    }
 
     public void register(Flyable p_flyable) {
         if (p_flyable == null)
@@ -26,7 +30,8 @@ public class Tower {
     }
 
     protected void conditionChanged() {
-        for (Flyable observer : observers) {
+        final List<Flyable> s_observers = new java.util.ArrayList<Flyable>(this.observers);
+        for (Flyable observer : s_observers) {
             observer.updateConditions();
         }
     }

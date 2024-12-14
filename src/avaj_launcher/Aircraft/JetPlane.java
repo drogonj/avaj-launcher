@@ -31,17 +31,15 @@ public class JetPlane extends Aircraft {
 
         // Main function
         final String n_weather = this.weatherTower.getWeather(this.coordinates);
-        final Coordinates n_coordinates = new Coordinates(
-            this.coordinates.getLongitude() + coords_behaviors.get(n_weather)[0],
-            this.coordinates.getLatitude() + coords_behaviors.get(n_weather)[1],
-            this.coordinates.getHeight() + coords_behaviors.get(n_weather)[2]
-        );
-        if (n_coordinates.getHeight() <= 0) {
+        int n_longitude = this.coordinates.getLongitude() + coords_behaviors.get(n_weather)[0];
+        int n_latitude = this.coordinates.getLatitude() + coords_behaviors.get(n_weather)[1];
+        int n_height = this.coordinates.getHeight() + coords_behaviors.get(n_weather)[2];
+        System.out.println("JetPlane#" + this.name + "(" + this.id + "): " + msg_behaviors.get(n_weather));
+        if (n_height <= 0) {
             this.weatherTower.unregister(this);
             System.out.println("JetPlane#" + this.name + "(" + this.id + "): landing.");
             return;
         }
-        this.coordinates = n_coordinates;
-        System.out.println("JetPlane#" + this.name + "(" + this.id + "): " + msg_behaviors.get(n_weather));
+        this.coordinates = new Coordinates(n_longitude, n_latitude, n_height);
     }
 }

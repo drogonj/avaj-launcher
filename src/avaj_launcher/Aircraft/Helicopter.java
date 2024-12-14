@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Helicopter extends Aircraft {
-    final Map<String, int[]> behaviors = new HashMap<>();
+    final Map<String, int[]> coords_behaviors = new HashMap<>();
     final Map<String, String> msg_behaviors = new HashMap<>();
 
     public Helicopter (long p_id, String p_name, Coordinates p_coordinates) {
@@ -18,11 +18,11 @@ public class Helicopter extends Aircraft {
     @Override
     public void updateConditions() {
         // Behaviors initialization
-        if (this.behaviors.isEmpty() || this.msg_behaviors.isEmpty()) {
-            this.behaviors.put("SUN", new int[]{10, 0, 2});
-            this.behaviors.put("RAIN", new int[]{5, 0, 0});
-            this.behaviors.put("FOG", new int[]{1, 0, 0});
-            this.behaviors.put("SNOW", new int[]{0, 0, -12});
+        if (this.coords_behaviors.isEmpty() || this.msg_behaviors.isEmpty()) {
+            this.coords_behaviors.put("SUN", new int[]{10, 0, 2});
+            this.coords_behaviors.put("RAIN", new int[]{5, 0, 0});
+            this.coords_behaviors.put("FOG", new int[]{1, 0, 0});
+            this.coords_behaviors.put("SNOW", new int[]{0, 0, -12});
             this.msg_behaviors.put("SUN", "This is hot.");
             this.msg_behaviors.put("RAIN", "It's raining. Better watch out for lightings.");
             this.msg_behaviors.put("FOG", "I can't see anything.");
@@ -31,17 +31,15 @@ public class Helicopter extends Aircraft {
 
         // Main function
         final String n_weather = this.weatherTower.getWeather(this.coordinates);
-        final Coordinates n_coordinates = new Coordinates(
-            this.coordinates.getLongitude() + behaviors.get(n_weather)[0],
-            this.coordinates.getLatitude() + behaviors.get(n_weather)[1],
-            this.coordinates.getHeight() + behaviors.get(n_weather)[2]
-        );
-        if (n_coordinates.getHeight() <= 0) {
+        int n_longitude = this.coordinates.getLongitude() + coords_behaviors.get(n_weather)[0];
+        int n_latitude = this.coordinates.getLatitude() + coords_behaviors.get(n_weather)[1];
+        int n_height = this.coordinates.getHeight() + coords_behaviors.get(n_weather)[2];
+        System.out.println("Helicopter#" + this.name + "(" + this.id + "): " + msg_behaviors.get(n_weather));
+        if (n_height <= 0) {
             this.weatherTower.unregister(this);
             System.out.println("Helicopter#" + this.name + "(" + this.id + "): landing.");
             return;
         }
-        this.coordinates = n_coordinates;
-        System.out.println("Helicopter#" + this.name + "(" + this.id + "): " + msg_behaviors.get(n_weather));
+        this.coordinates = new Coordinates(n_longitude, n_latitude, n_height);
     }
 }

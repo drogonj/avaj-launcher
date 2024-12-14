@@ -5,9 +5,9 @@ public class Coordinates {
     final private int latitude;
     final private int height;
 
-    Coordinates(int p_longitude, int p_latitude, int p_height) {
+    public Coordinates(int p_longitude, int p_latitude, int p_height) {
         if (p_latitude < 0 || p_longitude < 0 || p_height < 0) {
-            throw new IllegalArgumentException("Coordinates must be positive");
+            throw new IllegalArgumentException("Coordinates must be positive: " + p_longitude + ", " + p_latitude + ", " + p_height);
         }
         this.longitude = p_longitude;
         this.latitude = p_latitude;

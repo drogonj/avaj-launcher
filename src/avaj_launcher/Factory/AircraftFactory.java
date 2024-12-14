@@ -3,7 +3,7 @@ import avaj_launcher.Aircraft.*;
 
 public class AircraftFactory {
     private static AircraftFactory instance;
-    private static long n;
+    private static long n = 0;
 
     private AircraftFactory () {}
 
@@ -16,17 +16,23 @@ public class AircraftFactory {
 
     // TODO
     // Create Exceptions
-    public Flyable newFlyable(String p_type, String p_name, Coordinates p_coordinates) {
-        this.n += 1;
+    public Flyable newFlyable(String p_type, String p_name, int longitude, int latitude, int height) {
+        Coordinates p_coordinates;
+        try {
+            p_coordinates = new Coordinates(longitude, latitude, height);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid coordinates: " + e.getMessage());
+        }
+        n += 1;
         switch (p_type) {
             case "Helicopter" -> {
-                return (new Helicopter(this.n, p_name, p_coordinates));
+                return (new Helicopter(n, p_name, p_coordinates));
             }
             case "JetPlane" -> {
-                return (new JetPlane(this.n, p_name, p_coordinates));
+                return (new JetPlane(n, p_name, p_coordinates));
             }
             case "Baloon" -> {
-                return (new Baloon(this.n, p_name, p_coordinates));
+                return (new Baloon(n, p_name, p_coordinates));
             }
             default -> {return null;}
         }
