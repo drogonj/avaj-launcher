@@ -6,9 +6,12 @@ public class Coordinates {
     final private int height;
 
     Coordinates(int p_longitude, int p_latitude, int p_height) {
+        if (p_latitude < 0 || p_longitude < 0 || p_height < 0) {
+            throw new IllegalArgumentException("Coordinates must be positive");
+        }
         this.longitude = p_longitude;
         this.latitude = p_latitude;
-        this.height = p_height;
+        this.height = Math.min(p_height, 100);
     }
 
     public int getLongitude() {

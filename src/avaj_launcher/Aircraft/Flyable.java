@@ -12,6 +12,7 @@ public abstract class Flyable {
         if (weatherTower == null) {
             return;
         }
+        weatherTower.register(this);
         this.weatherTower = weatherTower;
     }
 }

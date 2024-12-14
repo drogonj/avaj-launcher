@@ -14,5 +14,6 @@ public class Aircraft extends Flyable {
     @Override
     public void updateConditions() {
         // Can't update conditions for Aircraft object
+        throw new UnsupportedOperationException("Aircraft object not supposed to update conditions");
     }
 }
