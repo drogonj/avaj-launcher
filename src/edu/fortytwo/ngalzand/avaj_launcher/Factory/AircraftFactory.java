@@ -1,5 +1,5 @@
-package avaj_launcher.Factory;
-import avaj_launcher.Aircraft.*;
+package edu.fortytwo.ngalzand.avaj_launcher.Factory;
+import edu.fortytwo.ngalzand.avaj_launcher.Aircraft.*;
 
 public class AircraftFactory {
     private static AircraftFactory instance;
@@ -14,15 +14,7 @@ public class AircraftFactory {
         return instance;
     }
 
-    // TODO
-    // Create Exceptions
-    public Flyable newFlyable(String p_type, String p_name, int longitude, int latitude, int height) {
-        Coordinates p_coordinates;
-        try {
-            p_coordinates = new Coordinates(longitude, latitude, height);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid coordinates: " + e.getMessage());
-        }
+    public Flyable newFlyable(String p_type, String p_name, Coordinates p_coordinates) {
         n += 1;
         switch (p_type) {
             case "Helicopter" -> {

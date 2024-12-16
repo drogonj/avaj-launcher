@@ -1,5 +1,5 @@
-package avaj_launcher.WeatherSystem;
-import avaj_launcher.Aircraft.Coordinates;
+package edu.fortytwo.ngalzand.avaj_launcher.WeatherSystem;
+import edu.fortytwo.ngalzand.avaj_launcher.Aircraft.Coordinates;
 import java.util.Random;
 
 public class WeatherProvider {

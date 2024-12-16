@@ -1,4 +1,5 @@
-package avaj_launcher.Aircraft;
+package edu.fortytwo.ngalzand.avaj_launcher.Aircraft;
+import edu.fortytwo.ngalzand.avaj_launcher.Exceptions.UndefiniedBehavior;
 
 public class Aircraft extends Flyable {
     protected long id;
@@ -12,8 +13,8 @@ public class Aircraft extends Flyable {
     }
 
     @Override
-    public void updateConditions() {
+    public void updateConditions() throws UndefiniedBehavior {
         // Can't update conditions for Aircraft object
-        throw new UnsupportedOperationException("Aircraft object not supposed to update conditions");
+        throw new UndefiniedBehavior("Aircraft object not supposed to update conditions");
     }
 }

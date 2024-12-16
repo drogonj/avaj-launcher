@@ -1,15 +1,14 @@
-package avaj_launcher;
-import avaj_launcher.WeatherSystem.*;
-import avaj_launcher.Aircraft.*;
-import avaj_launcher.Factory.*;
-
+package edu.fortytwo.ngalzand.avaj_launcher;
+import edu.fortytwo.ngalzand.avaj_launcher.Exceptions.*;
+import edu.fortytwo.ngalzand.avaj_launcher.WeatherSystem.*;
+import edu.fortytwo.ngalzand.avaj_launcher.Aircraft.*;
+import edu.fortytwo.ngalzand.avaj_launcher.Factory.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
-public class Main {
+public class Simulator {
     private static int simulationTime = -1;
     private final static WeatherTower weatherTower = new WeatherTower();
     private final static String[] aircraft_types = {"Baloon", "JetPlane", "Helicopter"};
@@ -31,7 +30,12 @@ public class Main {
         }
 
         try {
+            // Initialization
             parseScenario(args[0]);
+            File f = new File("simulation.txt");
+            f.createNewFile();
+
+            // Start Simulation
             for (int i = 0; i < simulationTime; i++) {
                 weatherTower.changeWeather();
                 if (weatherTower.getObservers().isEmpty()) {
@@ -39,58 +43,52 @@ public class Main {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(e.getMessage());
             System.exit(1);
         }
     }
 
-    private static void parseScenario(String scenario_filename) throws IOException {
+    private static void parseScenario(String scenario_filename) {
         // Read scenario file
         try (FileInputStream scenario_file = new FileInputStream(scenario_filename)) {
             String line = getnextLine(scenario_file);
             try {
                 simulationTime = Integer.parseInt(line);
+                if (simulationTime < 0)
+                    throw new NegativeArgument("Simulation time");
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Simulation time must be an integer");
+                throw new NotAnInteger("Simulation time");
             }
             while (scenario_file.available() > 0) {
                 line = getnextLine(scenario_file);
+                if (line.isEmpty())
+                    continue;
                 String[] parts = line.split(" ");
                 if (parts.length != 5) {
-                    throw new IllegalArgumentException("Wrong Format: " + line);
+                    throw new ScenarioWrongFormat();
                 }
                 if (!List.of(aircraft_types).contains(parts[0])) {
-                    throw new IllegalArgumentException("Unknown aircraft type: " + parts[0]);
+                    throw new UnknownAircraft(parts[0]);
                 }
-                String type = parts[0];
                 if (parts[1].length() > 10) {
-                    throw new IllegalArgumentException("Aircraft name is too long: " + parts[1]);
+                    throw new TooLongAircraftName(parts[1]);
                 }
-                String name = parts[1];
                 int longitude;
-                try {
-                    longitude = Integer.parseInt(parts[2]);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Longitude must be an integer: " + parts[2]);
-                }
                 int latitude;
-                try {
-                    latitude = Integer.parseInt(parts[3]);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Latitude must be an integer: " + parts[3]);
-                }
                 int height;
                 try {
+                    longitude = Integer.parseInt(parts[2]);
+                    latitude = Integer.parseInt(parts[3]);
                     height = Integer.parseInt(parts[4]);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Height must be an integer: " + parts[4]);
+                } catch (IllegalArgumentException e) {
+                    throw new NotAnInteger("Coordinates");
                 }
-                Flyable flyable = AircraftFactory.getInstance().newFlyable(type, name, longitude, latitude, height);
-                if (flyable != null) {
-                    flyable.registerTower(weatherTower);
-                }
+                Coordinates p_coordinates = Coordinates.newCoordinates(longitude, latitude, height);
+                if (height == 0)
+                    continue;
+                Flyable flyable = AircraftFactory.getInstance().newFlyable(parts[0], parts[1], p_coordinates);
+                flyable.registerTower(weatherTower);
             }
-            scenario_file.close();
         } catch (Exception e) {
             throw new RuntimeException("Failed to read scenario file: " + e.getMessage());
         }

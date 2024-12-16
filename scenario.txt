@@ -1,4 +1,3 @@
-100
-Baloon PROUT 2 3 20
-JetPlane J1 23 44 32
-Helicopter H1 654 33 20
+10
+Baloon PROUT 0 5 10
+JetPlane V-17x 1 5 20
